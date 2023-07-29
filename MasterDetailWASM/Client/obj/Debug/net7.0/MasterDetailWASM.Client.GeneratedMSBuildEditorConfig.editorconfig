@@ -1,0 +1,61 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = MasterDetailWASM.Client
+build_property.RootNamespace = MasterDetailWASM.Client
+build_property.ProjectDir = C:\Users\josep\OneDrive\Escritorio\Cursos\WebAssembly\MasterDetailWASM\MasterDetailWASM\Client\
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\josep\OneDrive\Escritorio\Cursos\WebAssembly\MasterDetailWASM\MasterDetailWASM\Client
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Pages/FetchData.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmV0Y2hEYXRhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Pages/ListaProducto.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGlzdGFQcm9kdWN0by5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Pages/Register.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Pages/VentasList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVmVudGFzTGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-y8nc3ggbmz
+
+[C:/Users/josep/OneDrive/Escritorio/Cursos/WebAssembly/MasterDetailWASM/MasterDetailWASM/Client/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-oc6p1p2mv9

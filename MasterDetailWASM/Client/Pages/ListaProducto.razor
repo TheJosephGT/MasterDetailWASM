@@ -1,0 +1,40 @@
+﻿@page "/r_producto"
+@inject IProductService ProductService
+@inject NavigationManager NavigationManager
+
+@if (ProductoList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4" AllowSorting="true" Data="@ProductoList" TItem="Producto" ColumnWidth="200px">
+        <Columns>
+            <RadzenGridColumn TItem="Producto" Property="Id" Title="Id" />
+            <RadzenGridColumn TItem="Producto" Property="Nombre" Title="Nombre" />
+            <RadzenGridColumn TItem="Producto" Property="Precio" Title="Precio" />
+            <RadzenGridColumn TItem="Producto" Property="Existencia" Title="Existencia" />
+        </Columns>
+    </RadzenGrid>
+
+}
+
+@code {
+    public List<Producto> ProductoList;
+    public string Message { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            ProductoList = await ProductService.GetList();
+        }
+        catch (Exception e)
+        {
+            Message = "Error... " + e.Message;
+        }
+    }
+
+}

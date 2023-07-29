@@ -1,0 +1,50 @@
+﻿@page "/"
+@inject IVentaService VentasService
+@inject NavigationManager NavigationManager
+
+<table>
+    <tbody>
+        <tr>
+            <td colspan="2"><a href="/r_venta">Add new</a></td>
+        </tr>
+    </tbody>
+</table>
+@if (VentasLista == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4" AllowSorting="true" Data="@VentasLista" TItem="Venta" ColumnWidth="200px">
+        <Columns>
+            <RadzenGridColumn TItem="Venta" Property="Id" Title="Id" />
+            <RadzenGridColumn TItem="Venta" Property="ClienteId" Title="ClienteId" />
+            <RadzenGridColumn TItem="Venta" Property="Fecha" Title="Fecha" />
+            <RadzenGridColumn TItem="Venta" Title="Edit">
+                <Template Context="data">
+                    <RadzenLink Path="@($"/r_venta/{data.Id}")" Text="Edit"></RadzenLink>
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+
+@code {
+    public List<Venta> VentasLista;
+    public string Message { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            VentasLista = await VentasService.GetList();
+        }
+        catch (Exception e)
+        {
+            Message = "Error... " + e.Message;
+        }
+    }
+
+}
+}

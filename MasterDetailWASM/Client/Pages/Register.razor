@@ -1,0 +1,330 @@
+﻿@page "/r_venta"
+@page "/r_venta/{Id:int}"
+@inject NavigationManager NavigationManager
+@inject IVentaService VentaService
+@inject IClienteService ClienteService
+@inject IProductService ProductService
+@inject NotificationService notify
+<PageTitle>Registro de venta</PageTitle>
+
+
+@inject NotificationService notify
+
+<EditForm Model="venta">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header">
+            <h2 class="text-center">Registro de venta</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2 col-md-4 mb-2 mx-auto">
+                    <label class="text-left">Cliente</label>
+                    @if(ListaClientes != null)
+                    {
+                        <InputSelect @bind-Value="venta.ClienteId" class="form-select">
+                            @foreach (var item in ListaClientes)
+                            {
+                                <option value="@item.Id">@item.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => venta.ClienteId)" />
+                        
+                    }
+                </div>
+                <div class="col-sm-2 col-md-4 mb-2 mx-auto">
+                    <label class="text-left">Fecha</label>
+                    <InputDate @bind-Value="venta.Fecha" class="form-control" disabled />
+                    <ValidationMessage For="@(() => venta.Fecha)" />
+                </div>
+            </div>
+
+            <br>
+            <hr>
+
+            <h5 class="mb-3 fw-bold text-center">Detalle sobre venta</h5>
+            <div class="row">
+                <div class="col-3">
+                    <label class="text-left">Producto</label>
+                    @if(ListaProductos != null)
+                    {
+                        <InputSelect @bind-Value="detalle.ProductoId" class="form-select">
+                            @foreach (var item in ListaProductos)
+                            {
+                                <option value="@item.Id">@item.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => detalle.ProductoId)" />
+                    }
+                </div>
+
+                <div class="col-2">
+                    <label class="text-left">Cantidad</label>
+                    <InputNumber @bind-Value="detalle.Cantidad" class="form-control"
+                                 placeholder="Ingrese la cantidad" />
+                    <ValidationMessage For="@(() => detalle.Cantidad)" />
+                </div>
+
+                <div class="col-sm-4 mb-3 d-flex align-items-end my-3">
+                    <button type="button" class="btn btn-success mt-2" @onclick="AgregarDetalle">
+                        <i class="oi oi-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in venta.DetalleVentas)
+                        {
+                            <tr>
+                                <td>@ListaProductos.FirstOrDefault(p => p.Id == item.ProductoId).Nombre</td>
+                                <td>@item.PrecioUnitario</td>
+                                <td>@item.Cantidad</td>
+                                <td>@item.Importe</td>
+                                <td>
+                                    <button class="btn btn-danger mr-2" onclick="@(() => EliminarDetalle(item))">
+                                        <i class="oi oi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="form-group text-center" display: inline-block>
+                <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo">
+                    <i class="oi oi-file" /> Nuevo
+                </button>
+                <button type="button" class="btn btn-lg btn-success" @onclick="Guardar">
+                    <i class="oi oi-document" />
+                    Guardar
+                </button>
+                <button type="button" disabled="@Condicion" class="btn btn-lg btn-danger" @onclick="Eliminar">
+                    <i class="oi oi-trash" />
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Venta venta { get; set; } = new Venta();
+    public DetalleVenta detalle { get; set; } = new DetalleVenta();
+    public bool Condicion { get; set; } = false;
+    public List<Producto> ListaProductos;
+    public List<Cliente> ListaClientes;
+    public string Message { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        if(Id > 0)
+        {
+            this.venta.Id = Id;
+            this.Buscar();
+        }
+        ListaProductos = await ProductService.GetList() ?? new List<Producto>();
+        ListaClientes = await ClienteService.GetList() ?? new List<Cliente>();
+    }
+
+
+    public void Nuevo()
+    {
+        venta = new Venta();
+        Condicion = false;
+        detalle.Cantidad = 0;
+    }
+
+    bool Validar()
+    {
+        bool validar = true;
+
+        if (venta.DetalleVentas.Count < 1)
+        {
+            notify.ShowNotification("Debe agregar al menos un detalle", "error", NotificationSeverity.Error);
+            validar = false;
+        }
+        if (venta.ClienteId <= 0)
+        {
+            notify.ShowNotification("Debe seleccionar un cliente", "error", NotificationSeverity.Error);
+            validar = false;
+        }
+
+        return validar;
+    }
+
+    bool ValidarEliminar()
+    {
+        bool validar = true;
+
+        if (venta.DetalleVentas.Count < 1)
+        {
+            validar = false;
+        }
+        if (venta.ClienteId <= 0)
+        {
+            validar = false;
+        }
+
+        return validar;
+    }
+
+    async Task Guardar()
+    {
+        if (!Validar()) { return; }
+
+        if (await VentaService.Save(venta))
+        {
+            notify.ShowNotification("Detalle registrado con exito!", "Registro Actualizado", NotificationSeverity.Success);
+            NavigationManager.NavigateTo("/");
+
+        }
+        else
+        {
+            notify.ShowNotification("No se ha guardado correctamente", "Error", NotificationSeverity.Error);
+        }
+
+    }
+
+    async Task Buscar()
+    {
+        if (venta!.Id > 0)
+        {
+            var encontrado = await VentaService.Search(venta.Id);
+
+            if (encontrado != null)
+            {
+                notify.ShowNotification("Se ha encontrado con éxito", "Encontrado", NotificationSeverity.Success);
+                this.venta = encontrado;
+            }
+            else
+            {
+                notify.ShowNotification("El ID ingresado no ha sido encontrado.", "Encontrado", NotificationSeverity.Error);
+                NavigationManager.NavigateTo($"/r_venta");
+            }
+        }
+    }
+
+    async Task Eliminar()
+    {
+        if (!ValidarEliminar()) 
+        { 
+            notify.ShowNotification("No hay nada para eliminar", "Warning", NotificationSeverity.Warning);
+            return; 
+
+        }
+
+        if (await VentaService.Delete(venta.Id))
+        {
+            notify.ShowNotification("Se ha eliminado con éxito.", "ELIMINADO", NotificationSeverity.Success);
+            NavigationManager.NavigateTo($"/");
+            venta = new Venta();
+        }
+        else
+        {
+            notify.ShowNotification("No hay elementos para borrar", "Warning", NotificationSeverity.Warning);
+            return;
+        }
+    }
+
+    private void ActualizarCantidadProducto(int productoId, int cantidad)
+    {
+        var producto = ListaProductos.FirstOrDefault(p => p.Id == productoId);
+        if (producto != null)
+        {
+            producto.Existencia -= cantidad;
+        }
+    }
+
+    async Task AgregarDetalle()
+    {
+        if(detalle.ProductoId <= 0 || detalle.Cantidad <= 0)
+        {
+            notify.ShowNotification("Debe seleccionar un producto y su cantidad.", "Warning", NotificationSeverity.Warning);
+            return;
+        }
+        var producto = await ProductService.Search(detalle.ProductoId);
+        if (detalle.Cantidad > 0)
+        {
+            if (detalle.Cantidad <= producto?.Existencia)
+            {
+                detalle.PrecioUnitario = producto.Precio;
+                detalle.Importe = detalle.Cantidad * producto.Precio;
+
+
+
+                var detalleExistente = this.venta.DetalleVentas.FirstOrDefault(d => d.ProductoId == detalle.ProductoId);
+                if (detalleExistente != null)
+                {
+                    var cantidadMaximaDisponible = producto.Existencia - detalleExistente.Cantidad;
+
+                    if (detalle.Cantidad > cantidadMaximaDisponible)
+                    {
+                        notify.ShowNotification("La cantidad excede la cantidad máxima disponible", "Error", NotificationSeverity.Warning);
+                        return;
+                    }
+                    detalleExistente.Cantidad += detalle.Cantidad;
+                    detalleExistente.Importe += detalle.Importe;
+                }
+                else
+                {
+                    this.venta.DetalleVentas.Add(this.detalle);
+                }
+
+                //Metodo para actualizar la cantidad del producto en el detalle
+                ActualizarCantidadProducto(detalle.ProductoId, detalle.Cantidad);
+
+
+                this.detalle = new DetalleVenta();
+                if (Condicion == false && venta.Id != 0)
+                {
+                    notify.ShowNotification("Se ha desactivado el boton eliminar, para poder eliminar la venta debe guardar los cambios","error", NotificationSeverity.Warning);
+                }
+                Condicion = true;
+
+            }
+            else
+            {
+                notify.ShowNotification("La cantidad asignada es mayor a la existencia","error", NotificationSeverity.Warning);
+            }
+        }
+        else
+        {
+            notify.ShowNotification("La cantidad debe ser mayor que 0.", "error", NotificationSeverity.Warning);
+        }
+    }
+
+    void EliminarDetalle(DetalleVenta detalleBorrado)
+    {
+        venta.DetalleVentas.Remove(detalleBorrado);
+
+        //Metodo para actualizar la cantidad del producto en el detalle
+        ActualizarCantidadProducto(detalleBorrado.ProductoId, - detalleBorrado.Cantidad);
+
+        if (Condicion == false && venta.Id != 0)
+        {
+            notify.ShowNotification("Se ha desactivado el boton eliminar, para poder eliminar la venta debe guardar los cambios", " ", NotificationSeverity.Warning);
+        }
+        Condicion = true;
+    }
+
+
+
+    
+
+}
