@@ -115,7 +115,7 @@ namespace MasterDetailWASM.Server.Repositories.VentaRepositorys
 
         public async Task<Venta> Search(int id)
         {
-            return await _contexto.Ventas.Include("DetallesVentas").AsNoTracking().SingleOrDefaultAsync(o => o.Id == id);
+            return await _contexto.Ventas.Include("DetalleVentas").FirstAsync(x => x.Id == id);
         }
 
         public async Task<List<Venta>> GetList(Expression<Func<Venta, bool>> criterio)
